@@ -1,0 +1,14 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+.editor {
+  border: 1px solid #ccc;
+}
+.toolbar {
+  position: absolute;
+  bottom: 0;
+}
+.sendButton {
+  margin-top: 10px;
+}

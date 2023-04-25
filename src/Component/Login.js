@@ -4,10 +4,13 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import NavBar from "./Navbar";
 import classes from "./Login.module.css";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { authAction } from "../Store/auth-slice";
 
 const Login = () => {
   const [islogin, setIsLogin] = useState(true);
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -79,6 +82,8 @@ const Login = () => {
         }
 
         alert("Logged In successfully");
+        console.log(data.idToken);
+        dispatch(authAction.login(data.idToken));
         navigate("/mailbox", { replace: true });
         emailRef.current.value = "";
         passwordRef.current.value = "";
