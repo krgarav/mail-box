@@ -3,11 +3,12 @@ import { Button, Container, Form } from "react-bootstrap";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import NavBar from "./Navbar";
 import classes from "./Login.module.css";
+import { useNavigate } from "react-router";
 
 const Login = () => {
   const [islogin, setIsLogin] = useState(true);
   const [show, setShow] = useState(false);
-
+  const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
@@ -78,7 +79,7 @@ const Login = () => {
         }
 
         alert("Logged In successfully");
-
+        navigate("/mailbox", { replace: true });
         emailRef.current.value = "";
         passwordRef.current.value = "";
       } catch (error) {
