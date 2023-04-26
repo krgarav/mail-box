@@ -4,12 +4,8 @@ import classes from "./Mainpage.module.css";
 import { useDispatch } from "react-redux";
 import { authAction } from "../../Store/auth-slice";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 const Mainpage = () => {
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
-  );
   const subjectRef = useRef();
   const mailRef = useRef();
   const textRef = useRef();
@@ -21,19 +17,20 @@ const Mainpage = () => {
     const enteredSubject = subjectRef.current.value;
     const enteredMail = mailRef.current.value;
     const enteredText = textRef.current.innerText;
-const mail = enteredMail.replace(/@|\./g,"")
-console.log(mail)
-    console.log(enteredSubject, enteredMail, enteredText);
-    fetch("https://mail-box-2b4a6-default-rtdb.firebaseio.com/"+mail+"/.json", {
-      method: "POST",
-      body: JSON.stringify({
-        subject: enteredSubject,
-        mailBody: enteredText,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const mail = enteredMail.replace(/@|\./g, "");
+    fetch(
+      "https://mail-box-2b4a6-default-rtdb.firebaseio.com/" + mail + "/.json",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          subject: enteredSubject,
+          mailBody: enteredText,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   };
   return (
     <>
