@@ -82,9 +82,9 @@ const Login = () => {
         }
 
         alert("Logged In successfully");
-        console.log(data.idToken);
-        dispatch(authAction.login(data.idToken));
-        navigate("/mailbox", { replace: true });
+      
+        dispatch(authAction.login({ tk: data.idToken, em: data.email }));
+        navigate("/inbox", { replace: true });
         emailRef.current.value = "";
         passwordRef.current.value = "";
       } catch (error) {

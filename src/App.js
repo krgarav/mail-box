@@ -4,6 +4,7 @@ import Login from "./Component/Login";
 import Mainpage from "./Component/Body/Mainpage";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import Inbox from "./Component/Body/Inbox";
 const App = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
@@ -12,9 +13,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         {isLoggedIn && <Route path="/mailbox" element={<Mainpage />} />}
-        {!isLoggedIn && (
-          <Route path="/mailbox" element={<Navigate to="/" replace={true} />} />
-        )}
+        {isLoggedIn && <Route path="/inbox" element={<Inbox />} />}
       </Routes>
     </div>
   );
