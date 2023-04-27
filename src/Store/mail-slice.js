@@ -14,8 +14,43 @@ const mailSlice = createSlice({
     addMailDetail(state, action) {
       state.mailDetail = action.payload;
     },
+    resetMailDetail(state) {
+      state.mailDetail = [];
+    },
+    resetgetMail(state) {
+      state.getMail = [];
+    },
+    
   },
 });
+
+export const update = (key) => {
+  return async (dispatch) => {
+    const id = localStorage.getItem("email").replace(/@|\./g, "");
+    const response = await fetch(
+      "https://mail-box-2b4a6-default-rtdb.firebaseio.com/" +
+        id +
+        "/" +
+        key +
+        ".json"
+    );
+    const data = await response.json();
+    fetch(
+      "https://mail-box-2b4a6-default-rtdb.firebaseio.com/" +
+        id +
+        "/" +
+        key +
+        ".json",
+      {
+        method: "PUT",
+        body: JSON.stringify({ ...data, userClicked: true }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  };
+};
 export const getMailDetail = (key) => {
   return async (dispatch) => {
     const id = localStorage.getItem("email").replace(/@|\./g, "");
@@ -27,7 +62,8 @@ export const getMailDetail = (key) => {
         ".json"
     );
     const data = await response.json();
-    dispatch(mailAction.addMailDetail(data))
+
+    dispatch(mailAction.addMailDetail(data));
   };
 };
 
@@ -39,7 +75,6 @@ export const getAction = (mail) => {
     );
     const data = await response.json();
     const allmail = Object.entries(data);
-
     dispatch(mailAction.getMail(allmail));
   };
 };

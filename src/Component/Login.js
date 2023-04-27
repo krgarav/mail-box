@@ -1,11 +1,12 @@
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import NavBar from "./Navbar";
 import classes from "./Login.module.css";
 import { useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authAction } from "../Store/auth-slice";
+import { mailAction } from "../Store/mail-slice";
 
 const Login = () => {
   const [islogin, setIsLogin] = useState(true);
@@ -15,6 +16,11 @@ const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
+  const getMail = useSelector((state) => state.mail.getMail);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  useEffect(() => {
+    dispatch(mailAction.resetgetMail());
+  }, [dispatch, mailAction, isLoggedIn]);
   const toggleHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
@@ -82,11 +88,9 @@ const Login = () => {
         }
 
         alert("Logged In successfully");
-      
+
         dispatch(authAction.login({ tk: data.idToken, em: data.email }));
-        navigate("/inbox", { replace: true });
-        emailRef.current.value = "";
-        passwordRef.current.value = "";
+        navigate("/inbox", { replace: false });
       } catch (error) {
         alert(error.message);
       }

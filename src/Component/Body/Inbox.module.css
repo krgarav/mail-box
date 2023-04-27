@@ -1,8 +1,28 @@
 .col1 {
+  padding-top:20px ;
   background-color: #c8c8c8;
-  height: 90vh;
+  min-height: 90vh;
 }
 .col2 {
   border: 1px solid black;
-  height: 90vh;
+  min-height: 90vh;
+  padding-top:20px ;
+}
+.dot{
+  height: 10px;
+  width: 10px;
+  border-radius: 100%;
+  background: blue;
+  margin-top: 8px;
+  margin-right: 10px;
+  margin-left: 0;
+}
+.dot1{
+  height: 10px;
+  width: 10px;
+  border-radius: 100%;
+  background: gainsboro;
+  margin-top: 8px;
+  margin-right: 10px;
+  margin-left: 0;
 }
