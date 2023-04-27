@@ -37,7 +37,7 @@ const NavItem = () => {
               </NavDropdown>
             </Nav>
             <Button onClick={logoutHandler} variant="danger">
-              Sign Out
+              Log Out
             </Button>
           </Navbar.Collapse>
         </Container>

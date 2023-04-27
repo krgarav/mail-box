@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = { email: [], getMail: [] };
+const initialState = { email: [], getMail: [], mailDetail: [] };
 const mailSlice = createSlice({
   name: "mail",
   initialState: initialState,
@@ -11,8 +11,25 @@ const mailSlice = createSlice({
     getMail(state, action) {
       state.getMail = action.payload;
     },
+    addMailDetail(state, action) {
+      state.mailDetail = action.payload;
+    },
   },
 });
+export const getMailDetail = (key) => {
+  return async (dispatch) => {
+    const id = localStorage.getItem("email").replace(/@|\./g, "");
+    const response = await fetch(
+      "https://mail-box-2b4a6-default-rtdb.firebaseio.com/" +
+        id +
+        "/" +
+        key +
+        ".json"
+    );
+    const data = await response.json();
+    dispatch(mailAction.addMailDetail(data))
+  };
+};
 
 export const getAction = (mail) => {
   return async (dispatch) => {
@@ -21,11 +38,7 @@ export const getAction = (mail) => {
       "https://mail-box-2b4a6-default-rtdb.firebaseio.com/" + newmail + ".json"
     );
     const data = await response.json();
-    const allmail = Object.values(data);
-    // for (const [key, value] of Object.entries(data)) {
-    //   // console.log(`${key}: ${JSON.stringify(value)}`);
-    //   allmail += JSON.stringify(value);
-    // }
+    const allmail = Object.entries(data);
 
     dispatch(mailAction.getMail(allmail));
   };
