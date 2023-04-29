@@ -21,7 +21,7 @@ import {
 } from "../../Store/mail-slice";
 import { isEqual } from "lodash";
 let first = true;
-let newMail=[];
+let newMail = [];
 const Inbox = () => {
   const [trigerred, setTrigered] = useState(false);
   const mailState = useSelector((state) => state.mail.mailState);
@@ -43,11 +43,11 @@ const Inbox = () => {
     if (first) {
       dispatch(getAction(localStorage.getItem("email")));
       first = false;
-    
+
       console.log("first running");
     } else {
       console.log(newMail, getMail);
-      if (!isEqual(newMail, getMail)===true) {
+      if (!isEqual(newMail, getMail) === true) {
         console.log("if running");
         dispatch(getAction(localStorage.getItem("email"))); //changing state of getmail
         newMail = [...getMail];
@@ -69,7 +69,9 @@ const Inbox = () => {
     navigate("/inbox/" + key);
   };
   const deleteHandler = (event, key) => {
-   
+    setTrigered((prev) => !prev);
+    dispatch(mailAction.changeMailState());
+    dispatch(deleteMail(key));
 
     // navigate("/inbox");
   };
