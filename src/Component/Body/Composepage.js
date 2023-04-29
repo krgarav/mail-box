@@ -7,11 +7,15 @@ import { useNavigate } from "react-router";
 import { EditorState, convertToRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
+import { useDispatch } from "react-redux";
+import { mailAction } from "../../Store/mail-slice";
 const Composepage = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const subjectRef = useRef();
   const mailRef = useRef();
   const navigate = useNavigate();
+  
+  const dispatch = useDispatch();
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
   };
@@ -46,6 +50,7 @@ const Composepage = () => {
         if (!response.ok) {
           throw new Error("Send email failed");
         }
+        dispatch(mailAction.changeMailState());
         alert("Send email successfull");
         navigate("/inbox");
       } catch (error) {

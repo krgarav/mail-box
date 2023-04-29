@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = { email: [], getMail: [], mailDetail: [] };
+const initialState = {
+  email: [],
+  getMail: [],
+  mailDetail: [],
+  mailState: false,
+};
 const mailSlice = createSlice({
   name: "mail",
   initialState: initialState,
@@ -20,10 +25,28 @@ const mailSlice = createSlice({
     resetgetMail(state) {
       state.getMail = [];
     },
-    
+    changeMailState(state) {
+      state.mailState = !state.mailState;
+    },
   },
 });
-
+export const deleteMail = (key) => {
+  return async (dispatch) => {
+    const id = localStorage.getItem("email").replace(/@|\./g, "");
+    const response = await fetch(
+      "https://mail-box-2b4a6-default-rtdb.firebaseio.com/" +
+        id +
+        "/" +
+        key +
+        ".json",
+      {
+        method: "DELETE",
+      }
+    );
+    
+    dispatch(getAction(localStorage.getItem("email")));
+  };
+};
 export const update = (key) => {
   return async (dispatch) => {
     const id = localStorage.getItem("email").replace(/@|\./g, "");
@@ -69,13 +92,22 @@ export const getMailDetail = (key) => {
 
 export const getAction = (mail) => {
   return async (dispatch) => {
-    const newmail = mail.replace(/@|\./g, "");
-    const response = await fetch(
-      "https://mail-box-2b4a6-default-rtdb.firebaseio.com/" + newmail + ".json"
-    );
-    const data = await response.json();
-    const allmail = Object.entries(data);
-    dispatch(mailAction.getMail(allmail));
+    try {
+      const newmail = mail.replace(/@|\./g, "");
+      const response = await fetch(
+        "https://mail-box-2b4a6-default-rtdb.firebaseio.com/" +
+          newmail +
+          ".json"
+      );
+      if (!response.ok) {
+        throw new Error("Data not available");
+      }
+      const data = await response.json();
+      const allmail = Object.entries(data);
+      dispatch(mailAction.getMail(allmail));
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 };
 export const mailAction = mailSlice.actions;
