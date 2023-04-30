@@ -33,8 +33,7 @@ const Inbox = () => {
   ).length;
 
   useEffect(() => {
-    console.log("running");
-    dispatch(mailAction.resetMailDetail());
+    // dispatch(mailAction.resetMailDetail());
     setTimeout(() => {
       dispatch(getAction(localStorage.getItem("email")));
     }, 2000);
