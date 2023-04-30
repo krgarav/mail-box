@@ -14,7 +14,6 @@ const Composepage = () => {
   const subjectRef = useRef();
   const mailRef = useRef();
   const navigate = useNavigate();
-  
   const dispatch = useDispatch();
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
@@ -25,10 +24,8 @@ const Composepage = () => {
     const enteredText = draftToHtml(
       convertToRaw(editorState.getCurrentContent())
     );
-
     const mail = enteredMail.replace(/@|\./g, "");
     const name = localStorage.getItem("email").split("@")[0];
-
     const sendData = async () => {
       try {
         const response = await fetch(
@@ -47,7 +44,23 @@ const Composepage = () => {
             },
           }
         );
-        if (!response.ok) {
+        const newResponse = await fetch(
+          "https://mail-box-2b4a6-default-rtdb.firebaseio.com/sent/" +
+            name +
+            "/.json",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              To: enteredMail,
+              subject: enteredSubject,
+              mailBody: enteredText,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok || !newResponse.ok) {
           throw new Error("Send email failed");
         }
         dispatch(mailAction.changeMailState());
