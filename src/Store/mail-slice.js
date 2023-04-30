@@ -47,6 +47,21 @@ export const sentMailItem = () => {
     dispatch(mailAction.addToSentMail(newData));
   };
 };
+export const deleteSentMail = (key)=>{
+  return async (dispatch) => {
+    const id = localStorage.getItem("email").split("@")[0];
+    const response = await fetch(
+      `https://mail-box-2b4a6-default-rtdb.firebaseio.com/sent/${id}/${key}.json`,
+      {
+        method: "DELETE",
+      }
+    );
+    if (response.ok) {
+      alert("message deleted");
+    }
+    
+  };
+}
 export const deleteMail = (key) => {
   return async (dispatch) => {
     const id = localStorage.getItem("email").replace(/@|\./g, "");

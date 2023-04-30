@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState, useMemo } from "react";
+import React, { Fragment, useEffect, useState} from "react";
 import {
   Container,
   Button,
@@ -15,19 +15,15 @@ import classes from "./Inbox.module.css";
 import NavItem from "../Header/Nav";
 import {
   deleteMail,
+  deleteSentMail,
   getAction,
   mailAction,
   sentMailItem,
   sentMailUpdate,
   update,
 } from "../../Store/mail-slice";
-import { isEqual } from "lodash";
-let first = true;
-let newMail = [];
 const Inbox = () => {
-  const [trigerred, setTrigered] = useState(false);
   const [inbox, setInbox] = useState(true);
-  const mailState = useSelector((state) => state.mail.mailState);
   const getMail = useSelector((state) => state.mail.getMail);
   const sentMail = useSelector((state) => state.mail.sentMail);
   const navigate = useNavigate();
@@ -37,22 +33,11 @@ const Inbox = () => {
   ).length;
 
   useEffect(() => {
+    console.log("running");
     dispatch(mailAction.resetMailDetail());
-    if (newMail.length === 0) {
-      newMail = [...getMail];
-    }
-    if (first) {
+    setTimeout(() => {
       dispatch(getAction(localStorage.getItem("email")));
-      first = false;
-    } else {
-      if (!isEqual(newMail, getMail) === true) {
-        dispatch(getAction(localStorage.getItem("email"))); //changing state of getmail
-        newMail = [...getMail];
-        return;
-      } else {
-        return;
-      }
-    }
+    }, 2000);
   }, [dispatch, getMail]);
 
   const composeHandler = () => {
@@ -68,17 +53,18 @@ const Inbox = () => {
     navigate("/inbox/" + key);
   };
   const deleteHandler = (event, key) => {
-    setTrigered((prev) => !prev);
     dispatch(mailAction.changeMailState());
     dispatch(deleteMail(key));
+  };
+  const deleteSentMailHandler = (event, key) => {
+    dispatch(deleteSentMail(key));
   };
   const inboxHandler = () => {
     setInbox(true);
     dispatch(getAction(localStorage.getItem("email")));
   };
   const sentHandler = () => {
-    dispatch(sentMailItem());
-
+    dispatch(sentMailItem()); // sent message request handler
     setInbox(false);
   };
   const listItems = getMail.map((item) => {
@@ -124,12 +110,10 @@ const Inbox = () => {
                 style={{ display: "flex" }}
                 onClick={(event) => sentItemClickHandler(event.target, item[0])}
               >
-                {/* {!item[1].userClicked && <div className={classes.dot}></div>}
-                {item[1].userClicked && <div className={classes.dot1}></div>} */}
                 <Col lg={3} sm={3}>
                   <strong>
                     <em>To : </em>
-                    {item[1].To}{" "}
+                    {item[1].To}
                   </strong>
                 </Col>
                 <Col lg={8} sm={7}>
@@ -140,7 +124,9 @@ const Inbox = () => {
             <Col lg={1} sm={2}>
               <Button
                 variant="outline-danger"
-                onClick={(event) => deleteHandler(event.target, item[0])}
+                onClick={(event) =>
+                  deleteSentMailHandler(event.target, item[0])
+                }
               >
                 Delete
               </Button>
@@ -191,6 +177,10 @@ const Inbox = () => {
           <Col className={classes.col2} lg={10} sm={9}>
             {inbox && <ListGroup>{listItems}</ListGroup>}
             {!inbox && <ListGroup>{sentItems}</ListGroup>}
+            {!inbox && sentMail.length === 0 && (
+              <p>You have not send any messages</p>
+            )}
+            {inbox && getMail.length === 0 && <p>No Messages Present</p>}
           </Col>
         </Row>
       </Container>
